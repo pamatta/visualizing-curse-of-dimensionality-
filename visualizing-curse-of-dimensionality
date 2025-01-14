@@ -1,0 +1,104 @@
+# Visualizing the Curse of Dimensionality
+# Author: Pascal Matta
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Function to generate random points in d-dimensional space
+def generate_points(num_points, num_dimensions):
+    """
+    Generate random points within a d-dimensional space.
+    
+    Args:
+        num_points (int): Number of points to generate.
+        num_dimensions (int): Number of dimensions for the space.
+
+    Returns:
+        np.ndarray: Array of shape (num_points, num_dimensions) containing random points.
+    """
+    return np.random.rand(num_points, num_dimensions)
+
+# Function to compute distance from the origin for each point
+def compute_distances_from_origin(points):
+    """
+    Compute the Euclidean distance of each point from the origin.
+    
+    Args:
+        points (np.ndarray): Array of points in d-dimensional space.
+
+    Returns:
+        np.ndarray: Array of distances from the origin.
+    """
+    return np.linalg.norm(points, axis=1)
+
+# Function to visualize distance distribution
+def plot_distance_distribution(distances, num_dimensions):
+    """
+    Plot the distribution of distances from the origin.
+    
+    Args:
+        distances (np.ndarray): Distances from the origin.
+        num_dimensions (int): Number of dimensions of the space.
+    """
+    plt.figure(figsize=(8, 6))
+    plt.hist(distances, bins=30, alpha=0.7, edgecolor='k')
+    plt.title(f"Distance from Origin Distribution in {num_dimensions}D", fontsize=14)
+    plt.xlabel("Distance from Origin", fontsize=12)
+    plt.ylabel("Frequency", fontsize=12)
+    plt.grid(True)
+    plt.show()
+
+# Function to print summary statistics
+def print_summary_statistics(distances, num_dimensions):
+    """
+    Print summary statistics for distances from the origin.
+    
+    Args:
+        distances (np.ndarray): Distances from the origin.
+        num_dimensions (int): Number of dimensions of the space.
+    """
+    print(f"{num_dimensions}D:")
+    print(f"  Mean Distance: {np.mean(distances):.4f}")
+    print(f"  Std Deviation: {np.std(distances):.4f}")
+    print(f"  Min Distance: {np.min(distances):.4f}")
+    print(f"  Max Distance: {np.max(distances):.4f}")
+    print("-" * 40)
+
+# Parameters
+num_points = 1000  # Number of points in the dataset
+dimensions_to_analyze = [2, 5, 10, 20, 50]  # Dimensions to analyze
+
+# Iterate through dimensions, generate points, and analyze distances
+for d in dimensions_to_analyze:
+    points = generate_points(num_points, d)
+    distances = compute_distances_from_origin(points)
+
+    # Print summary statistics
+    print_summary_statistics(distances, d)
+
+    # Plot the distance distribution
+    plot_distance_distribution(distances, d)
+
+# Visualization for 2D and 3D points to observe concentration
+for d in [2, 3]:
+    points = generate_points(num_points, d)
+    if d == 2:
+        plt.figure(figsize=(8, 6))
+        plt.scatter(points[:, 0], points[:, 1], alpha=0.5)
+        plt.title("Points in 2D Space", fontsize=14)
+        plt.xlabel("Dimension 1", fontsize=12)
+        plt.ylabel("Dimension 2", fontsize=12)
+        plt.grid(True)
+        plt.show()
+    elif d == 3:
+        fig = plt.figure(figsize=(8, 6))
+        ax = fig.add_subplot(111, projection='3d')
+        ax.scatter(points[:, 0], points[:, 1], points[:, 2], alpha=0.5)
+        ax.set_title("Points in 3D Space", fontsize=14)
+        ax.set_xlabel("Dimension 1", fontsize=12)
+        ax.set_ylabel("Dimension 2", fontsize=12)
+        ax.set_zlabel("Dimension 3", fontsize=12)
+        plt.show()
+
+# End of Script
